@@ -3043,7 +3043,7 @@ sap_OpenSession (tHalHandle hHal, ptSapContext sapContext,
     pMac->sap.sapCtxList [ sapContext->sessionId ].sapPersona=
                                sapContext->csrRoamProfile.csrPersona;
     *session_id = sapContext->sessionId;
-    sapContext->isSapSessionOpen = eSAP_TRUE;
+    sapContext->isSapSessionOpen = true;
     return VOS_STATUS_SUCCESS;
 }
 
@@ -4075,7 +4075,7 @@ sapFsm
                 VOS_TRACE( VOS_MODULE_ID_SAP, VOS_TRACE_LEVEL_INFO_HIGH, "In %s, new from state %s => %s, session id %d",
                             __func__, "eSAP_DISCONNECTED", "eSAP_CH_SELECT", sapContext->sessionId);
 
-                if (sapContext->isSapSessionOpen == eSAP_FALSE) {
+                if (sapContext->isSapSessionOpen == false) {
                     uint32_t type, subtype;
                     if (sapContext->csrRoamProfile.csrPersona ==
                             VOS_P2P_GO_MODE)
@@ -4099,7 +4099,7 @@ sapFsm
                                 FL("Error: calling sme_OpenSession"));
                         return VOS_STATUS_E_FAILURE;
                     }
-                    sapContext->isSapSessionOpen = eSAP_TRUE;
+                    sapContext->isSapSessionOpen = true;
                 }
 
                 /* init dfs channel nol */
@@ -4449,7 +4449,7 @@ sapFsm
                  vosStatus = sapGotoDisconnected(sapContext);
                  /* Close the SME session*/
 
-                 if (eSAP_TRUE == sapContext->isSapSessionOpen)
+                 if (true == sapContext->isSapSessionOpen)
                  {
                     tHalHandle hHal = VOS_GET_HAL_CB(sapContext->pvosGCtx);
                     if (NULL == hHal)
@@ -4462,7 +4462,7 @@ sapFsm
                          sap_CloseSession(hHal,
                                           sapContext, NULL, FALSE))
                      {
-                         sapContext->isSapSessionOpen = eSAP_FALSE;
+                         sapContext->isSapSessionOpen = false;
                      }
                  }
              }
@@ -4514,7 +4514,7 @@ sapFsm
                                               eSAP_START_BSS_EVENT,
                                               (v_PVOID_t)eSAP_STATUS_FAILURE);
                 vosStatus = sapGotoDisconnected(sapContext);
-                if (eSAP_TRUE == sapContext->isSapSessionOpen)
+                if (true == sapContext->isSapSessionOpen)
                 {
                     tHalHandle hHal = VOS_GET_HAL_CB(sapContext->pvosGCtx);
                     if (NULL == hHal)
@@ -4526,7 +4526,7 @@ sapFsm
                     else if (eHAL_STATUS_SUCCESS ==
                          sap_CloseSession(hHal, sapContext, NULL, FALSE))
                     {
-                         sapContext->isSapSessionOpen = eSAP_FALSE;
+                         sapContext->isSapSessionOpen = false;
                     }
                 }
             } else {
@@ -4613,7 +4613,7 @@ sapFsm
                 sapContext->sapsMachine = eSAP_DISCONNECTED;
 
                 /* Close the SME session*/
-                if (eSAP_TRUE == sapContext->isSapSessionOpen)
+                if (true == sapContext->isSapSessionOpen)
                 {
                     tHalHandle hHal = VOS_GET_HAL_CB(sapContext->pvosGCtx);
 
@@ -4625,7 +4625,7 @@ sapFsm
                     }
                     else
                     {
-                        sapContext->isSapSessionOpen = eSAP_FALSE;
+                        sapContext->isSapSessionOpen = false;
                         if (!(eHAL_STATUS_SUCCESS ==
                             sap_CloseSession(hHal,
                                      sapContext,
@@ -4896,7 +4896,7 @@ sapSortMacList(v_MACADDR_t *macList, v_U8_t size)
     }
 }
 
-eSapBool
+bool
 sapSearchMacList(v_MACADDR_t *macList, v_U8_t num_mac, v_U8_t *peerMac, v_U8_t *index)
 {
     v_SINT_t nRes = -1;
@@ -4907,7 +4907,7 @@ sapSearchMacList(v_MACADDR_t *macList, v_U8_t num_mac, v_U8_t *peerMac, v_U8_t *
         VOS_TRACE(VOS_MODULE_ID_SAP, VOS_TRACE_LEVEL_INFO_HIGH,
                   FL("either buffer is NULL or size = %d is more."),
                   num_mac);
-        return eSAP_FALSE;
+        return false;
     }
 
     while (nStart <= nEnd)
@@ -4927,7 +4927,7 @@ sapSearchMacList(v_MACADDR_t *macList, v_U8_t num_mac, v_U8_t *peerMac, v_U8_t *
                 VOS_TRACE( VOS_MODULE_ID_SAP, VOS_TRACE_LEVEL_INFO_HIGH,
                         "index %d", *index);
             }
-            return eSAP_TRUE;
+            return true;
         }
         if (nRes < 0)
             nStart = nMiddle + 1;
@@ -4937,7 +4937,7 @@ sapSearchMacList(v_MACADDR_t *macList, v_U8_t num_mac, v_U8_t *peerMac, v_U8_t *
 
     VOS_TRACE( VOS_MODULE_ID_SAP, VOS_TRACE_LEVEL_INFO_HIGH,
             "search not succ");
-    return eSAP_FALSE;
+    return false;
 }
 
 void
@@ -5112,7 +5112,7 @@ static VOS_STATUS sapGetChannelList(ptSapContext sapContext,
     }
     else
     {
-        if ( sapContext->allBandScanned == eSAP_FALSE )
+        if ( sapContext->allBandScanned == false )
         {
             //first band scan
             sapContext->currentPreferredBand = sapContext->scanBandPreference;
