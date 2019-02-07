@@ -242,6 +242,14 @@ config CPU_FREQ_GOV_SCHEDUTIL
 
 	  If in doubt, say N.
 
+config HISI_CPU_FREQ_GOV_SCHEDUTIL
+	bool "Hisilicon 'schedutil' cpufreq governor optimize"
+	depends on CPU_FREQ_GOV_SCHEDUTIL
+	default n
+	help
+	  This extends the functionality of existing schedutil governor.
+ 
+
 comment "CPU frequency scaling drivers"
 
 config CPUFREQ_DT
