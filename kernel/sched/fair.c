@@ -6002,6 +6002,19 @@ schedtune_cpu_margin(unsigned long util, int cpu)
 	return schedtune_margin(util, boost);
 }
 
+#ifdef CONFIG_HISI_CPU_FREQ_GOV_SCHEDUTIL
+static inline int
+schedtune_freq_margin(unsigned long util, int cpu)
+{
+	int boost = schedtune_freq_boost(cpu);
+
+	if (boost == 0)
+		return 0;
+
+	return schedtune_margin(util, boost);
+}
+#endif
+
 static inline long
 schedtune_task_margin(struct task_struct *p)
 {
@@ -6026,6 +6039,14 @@ schedtune_cpu_margin(unsigned long util, int cpu)
 	return 0;
 }
 
+#ifdef CONFIG_HISI_CPU_FREQ_GOV_SCHEDUTIL
+static inline int
+schedtune_freq_margin(unsigned long util, int cpu)
+{
+	return 0;
+}
+#endif
+
 static inline int
 schedtune_task_margin(struct task_struct *p)
 {
@@ -6044,6 +6065,18 @@ boosted_cpu_util(int cpu)
 
 	return util + margin;
 }
+
+#ifdef CONFIG_HISI_CPU_FREQ_GOV_SCHEDUTIL
+unsigned long
+freq_boosted(unsigned long util, int cpu)
+{
+	long margin = schedtune_freq_margin(util, cpu);
+
+	trace_sched_boost_cpu(cpu, util, margin);
+
+	return util + margin;
+}
+#endif
 
 static inline unsigned long
 boosted_task_util(struct task_struct *p)

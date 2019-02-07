@@ -2111,3 +2111,15 @@ walt_task_in_cum_window_demand(struct rq *rq, struct task_struct *p)
 #else /* arch_scale_freq_capacity */
 #define arch_scale_freq_invariant()     (false)
 #endif
+
+/* bits in struct sugov_cpu flags field */
+enum {
+	WALT_WINDOW_ROLLOVER		= (1 << 0),
+	INTER_CLUSTER_MIGRATION_SRC	= (1 << 1),
+	INTER_CLUSTER_MIGRATION_DST	= (1 << 2),
+	ADD_TOP_TASK			= (1 << 3),
+	ADD_ED_TASK			= (1 << 4),
+	CLEAR_ED_TASK			= (1 << 5),
+	POLICY_MIN_RESTORE		= (1 << 6),
+	FORCE_UPDATE			= (1 << 7),
+};

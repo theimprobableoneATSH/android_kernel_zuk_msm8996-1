@@ -287,12 +287,18 @@ struct boost_groups {
 	/* Maximum boost value for all RUNNABLE tasks on a CPU */
 	int boost_max;
 	u64 boost_ts;
+#ifdef CONFIG_HISI_CPU_FREQ_GOV_SCHEDUTIL
+	int freq_boost_max;
+#endif
 	struct {
 		/* True when this boost group maps an actual cgroup */
 		bool valid;
 		/* The boost for tasks on that boost group */
 		int boost;
 		/* Count of RUNNABLE tasks on that boost group */
+	#ifdef CONFIG_HISI_CPU_FREQ_GOV_SCHEDUTIL
+		int freq_boost;
+ #endif
 		unsigned tasks;
 		/* Timestamp of boost activation */
 		u64 ts;
@@ -651,6 +657,32 @@ int schedtune_cpu_boost(int cpu)
 
 	return bg->boost_max;
 }
+
+#ifdef CONFIG_HISI_CPU_FREQ_GOV_SCHEDUTIL
+int schedtune_freq_boost(int cpu)
+{
+	struct boost_groups *bg;
+ 
+	bg = &per_cpu(cpu_boost_groups, cpu);
+	return bg->freq_boost_max;
+}
+ 
+/*int schedtune_top_task(struct task_struct *p)
+{
+	struct schedtune *st;
+	int top_task;
+ 
+	if (!unlikely(schedtune_initialized))
+		return 0;
+		
+	rcu_read_lock();
+	st = task_schedtune(p);
+	top_task = st->top_task;
+	rcu_read_unlock();
+ 
+	return top_task;
+}*/
+#endif
 
 int schedtune_task_boost(struct task_struct *p)
 {
