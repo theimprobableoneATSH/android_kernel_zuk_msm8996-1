@@ -3665,9 +3665,13 @@ static int smbchg_icl_loop_disable_check(struct smbchg_chip *chip)
 
 #define UNKNOWN_BATT_TYPE	"Unknown Battery"
 #define LOADING_BATT_TYPE	"Loading Battery Data"
+
+static int fastchg_ma;
+module_param_named(fastchg_ma, fastchg_ma, int, 0644);
+
 static int smbchg_config_chg_battery_type(struct smbchg_chip *chip)
 {
-	int rc = 0, max_voltage_uv = 0, fastchg_ma = 0, ret = 0, iterm_ua = 0;
+	int rc = 0, max_voltage_uv = 0, ret = 0, iterm_ua = 0;
 	struct device_node *batt_node, *profile_node;
 	struct device_node *node = chip->pdev->dev.of_node;
 	union power_supply_propval prop = {0,};
@@ -3759,8 +3763,15 @@ static int smbchg_config_chg_battery_type(struct smbchg_chip *chip)
 	 */
 	if (!of_find_property(chip->pdev->dev.of_node,
 				"qcom,fastchg-current-ma", NULL)) {
-		rc = of_property_read_u32(profile_node,
-				"qcom,fastchg-current-ma", &fastchg_ma);
+		if (!fastchg_ma) {
+			rc = of_property_read_u32(profile_node,
+					"qcom,fastchg-current-ma", &fastchg_ma);
+			pr_info("Charging_hacking: Read current info from device tree.fastchg_ma=%d",fastchg_ma);
+		}
+		else{
+			pr_info("Charging_hacking: Bypass reading current info from device tree.fastchg_ma=%d",fastchg_ma);
+			rc=0;
+		}
 		if (rc) {
 			ret = rc;
 		} else {
@@ -3816,6 +3827,8 @@ static void smbchg_external_power_changed(struct power_supply *psy)
 {
 	struct smbchg_chip *chip = power_supply_get_drvdata(psy);
 	int rc, soc;
+
+	pr_info("smbchg_external_power_changed");
 
 	smbchg_aicl_deglitch_wa_check(chip);
 
