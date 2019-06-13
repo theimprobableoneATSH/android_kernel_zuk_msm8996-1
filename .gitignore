@@ -119,3 +119,12 @@ android/configs/android-*.cfg
 
 #Output dir
 out
+
+#Some stuffs in my workspace(toolchains etc)
+aarch64
+arm-linux-androideabi-
+arm-linux-gnueabi
+build.sh
+commands
+build
+
